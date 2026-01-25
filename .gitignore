@@ -1,0 +1,40 @@
+# Samsung Health export files (contain private health data)
+com.samsung.*.csv
+com.samsung.shealth.*.csv
+
+# Health CSV Importer reference files
+Health CSV Importer*.tsv
+
+# Output directory with converted health data
+health_csv_importer_output/
+
+# Samsung Health export subdirectories
+jsons/
+files/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

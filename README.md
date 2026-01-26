@@ -56,19 +56,20 @@ Converts the following Samsung Health data types:
 The script creates the following CSV files in the output directory:
 
 | File | Apple Health Data Type |
-| `heart_rate.csv` | Heart rate measurements
-| `steps.csv` | Daily step counts
-| `weight.csv` | Weight and body fat measurements
-| `height.csv` | Height measurements
-| `floors_climbed.csv` | Flights climbed
-| `blood_pressure.csv` | Blood pressure readings
-| `oxygen_saturation.csv` | SpO2 measurements
-| `water_intake.csv` | Water consumption
-| `respiratory_rate.csv` | Respiratory rate
-| `sleep_analysis.csv` | Sleep stages
-| `workouts.csv` | Exercise sessions
-| `nutrition.csv` | Nutritional data
-| `active_calories.csv` | Active energy burned
+|------|------------------------|
+| `heart_rate.csv` | Heart rate measurements |
+| `steps.csv` | Daily step counts |
+| `weight.csv` | Weight and body fat measurements |
+| `height.csv` | Height measurements |
+| `floors_climbed.csv` | Flights climbed |
+| `blood_pressure.csv` | Blood pressure readings |
+| `oxygen_saturation.csv` | SpO2 measurements |
+| `water_intake.csv` | Water consumption |
+| `respiratory_rate.csv` | Respiratory rate |
+| `sleep_analysis.csv` | Sleep stages |
+| `workouts.csv` | Exercise sessions |
+| `nutrition.csv` | Nutritional data |
+| `active_calories.csv` | Active energy burned |
 
 ## Data Mappings
 

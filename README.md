@@ -9,10 +9,6 @@ This allows you to import your Samsung health data into Apple Health.
 - Python 3.6+
 - Samsung data export
 
-## Background
-
-This script was written in close collaboration with [Claude Opus 4.5](https://www.anthropic.com/claude), Anthropic's AI assistant, using [Claude Code](https://claude.ai/code). The development process involved analyzing Samsung Health export formats, mapping data types to Apple Health equivalents, and handling various edge cases in the Samsung export format.
-
 ## Features
 
 Converts the following Samsung Health data types:

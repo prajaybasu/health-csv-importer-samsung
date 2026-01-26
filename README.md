@@ -1,6 +1,13 @@
 # Samsung Health to Health CSV Importer Converter
 
-A Python script that converts Samsung Health exported data to CSV files compatible with the [Health CSV Importer](https://apps.apple.com/app/health-csv-importer/id1582272946) iOS app, enabling you to import your Samsung Health data into Apple Health.
+Convert [Samsung Health]() data exports to CSV files compatibile with the [Health CSV Importer](https://apps.apple.com/app/health-csv-importer/id1582272946) iOS app.
+
+This allows you to import your Samsung health data into Apple Health.
+
+## Prerequisites
+
+- Python 3.6+
+- Samsung data export
 
 ## Background
 
@@ -26,56 +33,46 @@ Converts the following Samsung Health data types:
 | Nutrition | Macronutrients and micronutrients |
 | Active Calories | Daily active energy burned |
 
-## Requirements
-
-- Python 3.6 or later
-- No external dependencies (uses only standard library)
-
 ## Usage
 
-### 1. Export your data from Samsung Health
+1. Export your data from Samsung Health and place the CSV files in this directory.
+   - Open Samsung Health on your Android device
+   - Go to Settings > Download personal data
+   - Request and download your data export
+   - Extract the ZIP file to your computer
 
-1. Open Samsung Health on your Android device
-2. Go to Settings > Download personal data
-3. Request and download your data export
-4. Extract the ZIP file to your computer
+2. Run the conversion script:
+   ```bash
+   # Using default directories (current directory for input, creates output subdirectory)
+   python3 convert_samsung_to_health_csv.py
+   
+   # Specify input directory
+   python3 convert_samsung_to_health_csv.py /path/to/samsung/export
+   
+   # Specify both input and output directories
+   python3 convert_samsung_to_health_csv.py /path/to/samsung/export /path/to/output
+   ```
 
-### 2. Run the converter
-
-```bash
-# Using default directories (current directory for input, creates output subdirectory)
-python3 convert_samsung_to_health_csv.py
-
-# Specify input directory
-python3 convert_samsung_to_health_csv.py /path/to/samsung/export
-
-# Specify both input and output directories
-python3 convert_samsung_to_health_csv.py /path/to/samsung/export /path/to/output
-```
-
-### 3. Import into Apple Health
-
-1. Transfer the generated CSV files to your iPhone
-2. Open the Health CSV Importer app
-3. Import each CSV file
+3. Import the generated CSV files using the Health CSV Importer app.
 
 ## Output Files
 
 The script creates the following CSV files in the output directory:
 
-- `heart_rate.csv` - Heart rate measurements
-- `steps.csv` - Daily step counts
-- `weight.csv` - Weight and body fat measurements
-- `height.csv` - Height measurements
-- `floors_climbed.csv` - Flights climbed
-- `blood_pressure.csv` - Blood pressure readings
-- `oxygen_saturation.csv` - SpO2 measurements
-- `water_intake.csv` - Water consumption
-- `respiratory_rate.csv` - Respiratory rate
-- `sleep_analysis.csv` - Sleep stages
-- `workouts.csv` - Exercise sessions
-- `nutrition.csv` - Nutritional data
-- `active_calories.csv` - Active energy burned
+| File | Apple Health Data Type |
+| `heart_rate.csv` | Heart rate measurements
+| `steps.csv` | Daily step counts
+| `weight.csv` | Weight and body fat measurements
+| `height.csv` | Height measurements
+| `floors_climbed.csv` | Flights climbed
+| `blood_pressure.csv` | Blood pressure readings
+| `oxygen_saturation.csv` | SpO2 measurements
+| `water_intake.csv` | Water consumption
+| `respiratory_rate.csv` | Respiratory rate
+| `sleep_analysis.csv` | Sleep stages
+| `workouts.csv` | Exercise sessions
+| `nutrition.csv` | Nutritional data
+| `active_calories.csv` | Active energy burned
 
 ## Data Mappings
 
@@ -120,10 +117,8 @@ The script automatically handles unit conversions:
 
 ## License
 
-MIT License - feel free to use, modify, and distribute.
+MIT License - feel free to use and modify as needed.
 
-## Acknowledgments
+---
 
-- Written in collaboration with [Claude Opus 4.5](https://www.anthropic.com/claude) by Anthropic
-- Built for use with [Health CSV Importer](https://apps.apple.com/app/health-csv-importer/id1582272946)
-- Samsung Health exercise type codes from [Samsung Developer Documentation](https://developer.samsung.com/health/android/data/api-reference/EXERCISE_TYPE.html)
+*This script was written in close collaboration with Claude Opus 4.5 (Anthropic).*

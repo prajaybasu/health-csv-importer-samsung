@@ -1,6 +1,6 @@
 # Samsung Health to Health CSV Importer Converter
 
-Convert [Samsung Health]() data exports to CSV files compatibile with the [Health CSV Importer](https://apps.apple.com/app/health-csv-importer/id1582272946) iOS app.
+Convert [Samsung Health](https://www.samsung.com/us/support/owners/app/samsung-health) data exports to CSV files compatibile with the [Health CSV Importer](https://apps.apple.com/app/health-csv-importer/id1582272946) iOS app.
 
 This allows you to import your Samsung health data into Apple Health.
 

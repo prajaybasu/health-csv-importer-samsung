@@ -18,6 +18,7 @@ import glob
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 
 # Samsung Health exercise type to Health CSV Importer workout type mapping
@@ -132,22 +133,33 @@ SLEEP_STAGE_MAPPING = {
 
 
 def parse_samsung_datetime(dt_str: str) -> Optional[datetime]:
-    """Parse Samsung Health datetime string to datetime object."""
+    """Parse Samsung Health datetime string to datetime object in UTC."""
     if not dt_str or dt_str.strip() == "":
         return None
     try:
         # Format: 2023-07-04 16:32:11.353
-        return datetime.strptime(dt_str.split(".")[0], "%Y-%m-%d %H:%M:%S")
+        return datetime.strptime(dt_str.split(".")[0], "%Y-%m-%d %H:%M:%S").replace(tzinfo=ZoneInfo("UTC"))
     except ValueError:
         try:
-            return datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+            # Format: 2023-07-04 16:32:11
+            return datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=ZoneInfo("UTC"))
         except ValueError:
-            return None
+            try:
+                # Format: 09/23/2017, 06:50:10
+                return datetime.strptime(dt_str, "%m/%d/%Y, %H:%M:%S").replace(tzinfo=ZoneInfo("Asia/Kolkata"))
+            except ValueError:
+                return None
 
 
 def format_datetime(dt: datetime) -> str:
-    """Format datetime for Health CSV Importer (ISO 8601)."""
-    return dt.strftime("%Y-%m-%d %H:%M:%S")
+    """Convert datetime from UTC to Asia/Kolkata and format for Health CSV Importer (ISO 8601 with T separator)."""
+    if dt.tzinfo is None:
+        # If datetime is naive, assume UTC
+        dt = dt.replace(tzinfo=ZoneInfo("UTC"))
+    # Convert to Asia/Kolkata timezone
+    local_dt = dt.astimezone(ZoneInfo("Asia/Kolkata"))
+    # Format as ISO 8601 with timezone offset
+    return local_dt.isoformat(timespec="seconds")
 
 
 def read_samsung_csv(filepath: str) -> Tuple[List[str], List[Dict[str, str]]]:
@@ -192,19 +204,18 @@ def find_samsung_file(directory: str, pattern: str) -> Optional[str]:
 
 def convert_heart_rate(input_dir: str, output_dir: str) -> int:
     """Convert heart rate data."""
-    filepath = find_samsung_file(input_dir, "tracker.heart_rate")
+    filepath = find_samsung_file(input_dir, "heart_rate")
     if not filepath:
         return 0
 
     headers, rows = read_samsung_csv(filepath)
     if not rows:
         return 0
-
+    #print(rows.slice(0,1))
     output_rows = []
     for row in rows:
-        start_time = parse_samsung_datetime(row.get("com.samsung.health.heart_rate.start_time", ""))
-        heart_rate = row.get("com.samsung.health.heart_rate.heart_rate", "")
-
+        start_time = parse_samsung_datetime(row.get("start_time", ""))
+        heart_rate = row.get("heart_rate", "")
         if start_time and heart_rate:
             try:
                 hr_value = float(heart_rate)
@@ -213,8 +224,9 @@ def convert_heart_rate(input_dir: str, output_dir: str) -> int:
                     "heart rate": str(int(hr_value)),
                 })
             except ValueError:
+                print(f"Invalid value")
                 continue
-
+    print("Heart rate rows processed:", len(output_rows))
     if output_rows:
         write_health_csv(os.path.join(output_dir, "heart_rate.csv"), ["date", "heart rate"], output_rows)
 
@@ -363,7 +375,7 @@ def convert_floors_climbed(input_dir: str, output_dir: str) -> int:
 
 def convert_blood_pressure(input_dir: str, output_dir: str) -> int:
     """Convert blood pressure data."""
-    filepath = find_samsung_file(input_dir, "shealth.blood_pressure")
+    filepath = find_samsung_file(input_dir, "health.blood_pressure")
     if not filepath:
         return 0
 
@@ -373,9 +385,9 @@ def convert_blood_pressure(input_dir: str, output_dir: str) -> int:
 
     output_rows = []
     for row in rows:
-        start_time = parse_samsung_datetime(row.get("com.samsung.health.blood_pressure.start_time", ""))
-        systolic = row.get("com.samsung.health.blood_pressure.systolic", "")
-        diastolic = row.get("com.samsung.health.blood_pressure.diastolic", "")
+        start_time = parse_samsung_datetime(row.get("start_time", ""))
+        systolic = row.get("systolic", "")
+        diastolic = row.get("diastolic", "")
 
         if start_time and systolic and diastolic:
             try:
@@ -530,22 +542,24 @@ def convert_sleep_stages(input_dir: str, output_dir: str) -> int:
 
 def convert_exercises(input_dir: str, output_dir: str) -> int:
     """Convert exercise/workout data."""
-    filepath = find_samsung_file(input_dir, "shealth.exercise.2")
+    filepath = find_samsung_file(input_dir, "exercise.2")
     if not filepath:
+        print(f"File not found: {filepath}")
         return 0
 
     headers, rows = read_samsung_csv(filepath)
     if not rows:
+        print(f"No data rows found in: {filepath}")
         return 0
 
     output_rows = []
     for row in rows:
-        start_time = parse_samsung_datetime(row.get("com.samsung.health.exercise.start_time", ""))
-        end_time = parse_samsung_datetime(row.get("com.samsung.health.exercise.end_time", ""))
-        exercise_type = row.get("com.samsung.health.exercise.exercise_type", "")
-        calories = row.get("com.samsung.health.exercise.calorie", "")
-        distance = row.get("com.samsung.health.exercise.distance", "")
-        duration_ms = row.get("com.samsung.health.exercise.duration", "")
+        start_time = parse_samsung_datetime(row.get("start_time", ""))
+        end_time = parse_samsung_datetime(row.get("end_time", ""))
+        exercise_type = row.get("exercise_type", "")
+        calories = row.get("calorie", "")
+        distance = row.get("distance", "")
+        duration_ms = row.get("duration", "")
 
         if start_time and exercise_type:
             try:
